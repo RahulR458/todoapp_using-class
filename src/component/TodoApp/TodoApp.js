@@ -1,49 +1,42 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import "./TodoApp.css"
 
-export default class TodoApp extends Component {
 
-  state = {
-    input:"",
-    items:[]
+const TodoApp = () => {
+  const [input, setInput] = useState("");
+  const [items, setItems] = useState([]);
+
+  const handleChange = (event) => {
+    setInput(event.target.value);
   }
 
-  handleChange = (event)=>{
-      this.setState({
-        input: event.target.value
-        
-      })
+  const storeItems = (event) => {
+    event.preventDefault();
+    setItems([...items, input]);
+    setInput("");
   }
 
-  storeItems = (event)=>{
-    event.preventDefault()
-    const {input} = this.state;
-    this.setState({
-      items:[...this.state.items,input],
-      input:""
-    })
+  const deleteItem = (key) => {
+    setItems(items.filter((data, index) => index !== key));
   }
 
-  deleteItem = (key)=>{
-    this.setState({
-      items : this.state.items.filter((data, index)=>index !== key)
-    })
-  }
-
-  render() {
-    const {input, items} = this.state
-    return (
-      <div className="todo-container">
-        <form className="input-section" onSubmit={this.storeItems}>
-          <h1>TodoApp</h1>
-          <input type="text" value={input} onChange={this.handleChange} placeholder="Enter task here..." />
-        </form>
-        <ul>
-          {items.map((data, index)=>(
-            <li key={index}>{data} <i onClick={()=>this.deleteItem(index)} className="fa-solid fa-trash-can"></i></li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
+  return (
+    <div className="todo-container">
+      <form className="input-section" onSubmit={storeItems}>
+        <h1>TodoApp</h1>
+        <input type="text" value={input} onChange={handleChange} placeholder="Enter task here..." />
+      </form>
+      <ul>
+        {items.map((data, index) => (
+          <li key={index}>
+            {data} <i onClick={() => deleteItem(index)} className="fa-solid fa-trash-can"></i>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
+
+export default TodoApp;
+
+
